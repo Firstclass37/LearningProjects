@@ -17,9 +17,9 @@ namespace BinaryTreeApp
         {
             var tree = new BinaryTree<int>();
             tree.Add(new[] { 7, 4, 9, 1, 3, -1, 8, 2, 11 });
-            Console.WriteLine(tree.Show());
+            Console.WriteLine(tree.Show(ShowType.Infix));
             tree.Remove(1);
-            Console.WriteLine(tree.Show());
+            Console.WriteLine(tree.Show(ShowType.Infix));
         }
 
         private static void Contains()
