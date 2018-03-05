@@ -8,9 +8,19 @@ namespace BinaryTreeApp
         static void Main(string[] args)
         {
            var trree = new BinaryTree<string>();
+            Save();
            Contains();
            Remove();
            Console.ReadKey();
+        }
+
+        private static void Save()
+        {
+            var manager = new TreeManager();
+            var tree = new BinaryTree<int>();
+            tree.Add(new[] { 7, 4, 9, 1, 3, -1, 8, 2, 11 });
+            var path = manager.Save(tree);
+            var loadedTree = manager.Load<int>(path);
         }
 
         private static void Remove()

@@ -2,7 +2,7 @@
 
 namespace Tree
 {
-    internal sealed class TreeNode<T> where T : IComparable<T>
+    public sealed class TreeNode<T> where T : IComparable<T>
     {
         public TreeNode(T value)
         {

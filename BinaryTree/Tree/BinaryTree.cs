@@ -1,9 +1,11 @@
 ﻿using System;
+using Newtonsoft.Json;
 
 namespace Tree
 {
     public sealed class BinaryTree<T> where T : IComparable<T>
     {
+        [JsonProperty]
         private TreeNode<T> _root;
 
         public void Add(T value)
