@@ -26,11 +26,21 @@ public class Program
         var newBoard = new Board(board);
         var solver = new Solver();
 
-        newBoard.Show();
+        
+        PrintSudoku(board);
+        
+        SolveSudoku(board);
 
-        solver.Solve(newBoard);
+        Console.WriteLine();
+        Console.WriteLine();
+        
+        
+        PrintSudoku(board);
+        //newBoard.Show();
 
-        newBoard.Show();
+        //solver.Solve(newBoard);
+
+        //newBoard.Show();
         Console.WriteLine($"Stemps : {solver.StepCount}");
         Console.ReadKey();
     }
@@ -43,24 +53,14 @@ public class Program
 
     private static void SolveSudoku(int[,] array)
     {
-        var fullInitedRow = new List<int>();
-        do
+        var queue = CreateStack(array);
+        var attemptCount = 10000;
+        while (queue.Any() && attemptCount-- > 0)
         {
-            for (int rowNum = 0; rowNum < 9; rowNum++)
-            {
-                if (fullInitedRow.Contains(rowNum))
-                    continue;
-                var isRowInited = true;
-                for (int columnNum = 0; columnNum < 9; columnNum++)
-                {
-                    var inited = TryInit(array, rowNum, columnNum);
-                    isRowInited = isRowInited && inited;
-                }
-                if (isRowInited)
-                    fullInitedRow.Add(rowNum);
-            }
-            Console.WriteLine(new string('=', 15));
-        } while (fullInitedRow.Count < 8);
+            var currentElement = queue.Dequeue();
+            if (TryInit(array, currentElement.Item1, currentElement.Item2) != true)
+                queue.Enqueue(currentElement);
+        } 
     }
 
     private static bool TryInit(int[,] array, int rowNum, int columnNum)
@@ -70,23 +70,23 @@ public class Program
         var columnElements = GetColumnElements(array, columnNum);
         var rowElements = GetRowElements(array, rowNum);
         var squareElements = GetSquareElement(array, rowNum, columnNum);
-                
-        var missingInRow = GetAvailableNumber(rowElements).Except(squareElements).Except(columnElements).ToList();
-        if (missingInRow.Count == 1)
-        {
-            array[rowNum, columnNum] = missingInRow.First();
-            return true;
-        }
-                
-        var missingInColumn = GetAvailableNumber(columnElements).Except(squareElements).Except(rowElements).ToList();
-        if (missingInColumn.Count == 1)
-        {
-            array[rowNum, columnNum] = missingInColumn.First();
-            return true;
-        }
-        return false;
+
+        var availabelRow = GetAvailableNumber(rowElements);
+        var availableColumn = GetAvailableNumber(columnElements);
+        var availableSquare = GetAvailableNumber(squareElements);
+
+        var canBe = availabelRow.Intersect(availableColumn).Intersect(availableSquare).ToList().ElementAtOrDefault(1);
+        if (canBe != 0)
+            array[rowNum, columnNum] = canBe;
+        return canBe != 0;
     }
 
+    private static int[] GetAvailableNumber(int[] inputNumbers)
+    {
+        return numbers.Except(inputNumbers).Where(n => n != _empty).ToArray();
+    }
+    
+    
     private static int[] GetRowElements(int[,] array, int rowNum)
     {
         var rowElements = new List<int>();
@@ -112,13 +112,11 @@ public class Program
     private static int[] GetSquareElement(int[,] array, int row, int column)
     {
         var squareNumbers = new List<int>();
-        var startRowPos = numbers.First(n => (n == 1 || n % 3 == 0) && (n - 1) <= row) - 1;
-        var endRowPos = numbers.First(n =>  n % 3 == 0 && (n - 1) >= row) - 1;
-        var startColPos = numbers.First(n => (n == 1 || n % 3 == 0)  && (n - 1) <= column) - 1;
-        var endColPos = numbers.First(n => n % 3 == 0 && (n - 1) >= column) - 1;
-        for (int r = startRowPos; r <= endRowPos; r++)
+        var startRowPos = row/3 * 3;
+        var startColPos = column / 3 * 3;
+        for (int r = startRowPos; r < startRowPos + 3; r++)
         {
-            for (int c = startColPos; c <= endColPos; c++)
+            for (int c = startColPos; c < startColPos + 3; c++)
             {
                 if (array[r, c] != _empty)
                     squareNumbers.Add(array[r, c]);
@@ -126,12 +124,37 @@ public class Program
         }
         return squareNumbers.ToArray();
     }
-
-    private static int[] GetAvailableNumber(int[] inputNumbers)
+    
+    private static void PrintSudoku(int[,] sudoku)
     {
-        var numbersFOrCheck = inputNumbers.Except(new List<int>() {0}).ToArray();
-        var available = numbers.Except(numbersFOrCheck).ToArray();
-        return available;
+        for (int i = 0; i < 9; i++)
+        {
+            for (int j = 0; j < 9; j++)
+            {
+                Console.Write(sudoku[i, j]);
+                if (j+1 >= 3 && j+1 < 9 &&(j+1) % 3 == 0)
+                    Console.Write("|");
+                else
+                    Console.Write(" ");
+            }
+            Console.WriteLine();
+            if (i+1 >= 3 && i+1 < 9 &&(i+1) % 3 == 0)
+                Console.WriteLine(new string('-', 18));
+        }
     }
+    
 
+    private static Queue<Tuple<int, int>> CreateStack(int[,] array)
+    {
+        var stack = new Queue<Tuple<int, int>>();
+        for (int row = 0; row < 9; row++)
+        {
+            for (int column = 0; column < 9; column++)
+            {
+                if (array[row, column] == 0)
+                    stack.Enqueue(new Tuple<int, int>(row, column));
+            }
+        }
+        return stack;
+    }
 }
