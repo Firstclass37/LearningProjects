@@ -10,15 +10,20 @@ namespace Tree
     {
         public string Save<T>(BinaryTree<T> tree, ShowType type) where T: IComparable<T>
         {
+            var formatInfo = new FormatInfo(type);
+            return Save<T>(tree, formatInfo);
+        }
+
+        public string Save<T>(BinaryTree<T> tree, FormatInfo info) where T : IComparable<T>
+        {
             var formatter = new Formatter<T>(i => JsonConvert.SerializeObject(i));
             var assemblyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var newFile = Path.Combine(assemblyPath, $"tree_{DateTime.Now.ToFileTime()}.txt");
 
-            var formatInfo = new FormatInfo(type);
-            var formatInfoString = JsonConvert.SerializeObject(formatInfo);
-            var treeString = formatter.ToString(tree, formatInfo);
+            var formatInfoString = JsonConvert.SerializeObject(info);
+            var treeString = formatter.ToString(tree, info);
 
-            File.WriteAllLines(newFile, new List<string> {formatInfoString, treeString});
+            File.WriteAllLines(newFile, new List<string> { formatInfoString, treeString });
             return newFile;
         }
 

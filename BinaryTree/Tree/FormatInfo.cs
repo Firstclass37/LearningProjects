@@ -2,7 +2,7 @@
 
 namespace Tree
 {
-    internal sealed class FormatInfo
+    public sealed class FormatInfo
     {
         public FormatInfo(ShowType type)
         {

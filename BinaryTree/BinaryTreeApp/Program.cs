@@ -16,13 +16,16 @@ namespace BinaryTreeApp
         private static void Parse()
         {
             var formatter = new Formatter<int>();
+            var formatInfo = new FormatInfo(ShowType.Infix);
+            formatInfo.ValueStart = "<";
+            formatInfo.ValueEnd = ">";
             var manager = new TreeManager();
             var originalTree = new BinaryTree<int>();
             originalTree.Add(new[] { 7, 4, 9, 1, 3, -1, 8, 2, 11 });
-            Console.WriteLine($"Original  : {formatter.ToString(originalTree, ShowType.Infix)}");
-            var savedPath = manager.Save(originalTree, ShowType.Infix);
+            Console.WriteLine($"Original  : {formatter.ToString(originalTree, formatInfo)}");
+            var savedPath = manager.Save(originalTree, formatInfo);
             var loadedTree = manager.Load<int>(savedPath);
-            Console.WriteLine($"AfterSave : {formatter.ToString(loadedTree, ShowType.Infix)}");
+            Console.WriteLine($"AfterSave : {formatter.ToString(loadedTree, formatInfo)}");
             
         }
 

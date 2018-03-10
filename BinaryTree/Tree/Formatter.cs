@@ -23,7 +23,7 @@ namespace Tree
             return ToString(tree.Root, formatInfo);
         }
 
-        internal string ToString(BinaryTree<T> tree, FormatInfo info)
+        public string ToString(BinaryTree<T> tree, FormatInfo info)
         {
             return ToString(tree.Root, info);
         }
@@ -33,7 +33,7 @@ namespace Tree
             if (node == null)
                 return " ";
             if (!node.HasAnyChilds())
-                return node.Value.ToString();
+                return $"{formatInfo.ValueStart}{_toStringFunc(node.Value)}{formatInfo.ValueEnd}";
             var parametrs = new Object[3];
             parametrs[formatInfo.LeftChildPos] = ToString(node.LeftChild, formatInfo);
             parametrs[formatInfo.RightChildPos] = ToString(node.RigthChild, formatInfo);

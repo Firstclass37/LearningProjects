@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
 
@@ -29,7 +30,7 @@ namespace Tree
             var parts = ParseParts(corrected);
             if (parts.Length != 3 || parts[_formatInfo.RootPos].Contains("("))
                 throw new ArgumentException($"Invalid tree part {treeString}");
-            var node = new TreeNode<T>(JsonConvert.DeserializeObject<T>(parts[_formatInfo.RootPos]));
+            var node = new TreeNode<T>(JsonConvert.DeserializeObject<T>(TakeValue(parts[_formatInfo.RootPos])));
             var leftChild = parts[_formatInfo.LeftChildPos].Contains("(")
                 ? ParseNode<T>(parts[_formatInfo.LeftChildPos])
                 : CreateNode<T>(parts[_formatInfo.LeftChildPos]);
@@ -91,7 +92,17 @@ namespace Tree
         {
             if (string.IsNullOrWhiteSpace(value))
                 return null;
-            return new TreeNode<T>(JsonConvert.DeserializeObject<T>(value));
+            return new TreeNode<T>(JsonConvert.DeserializeObject<T>(TakeValue(value)));
         }
+
+        private string TakeValue(string sourceString)
+        {
+            var neededChars = sourceString.Trim().Where(v => v.ToString() != _formatInfo.ValueStart &&
+                                                      v.ToString() != _formatInfo.ValueEnd)
+                .ToArray();
+            var targetValue = new string(neededChars);
+            return targetValue;
+        }
+
     }
 }
