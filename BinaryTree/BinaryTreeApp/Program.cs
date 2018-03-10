@@ -20,7 +20,7 @@ namespace BinaryTreeApp
             var originalTree = new BinaryTree<int>();
             originalTree.Add(new[] { 7, 4, 9, 1, 3, -1, 8, 2, 11 });
             Console.WriteLine($"Original  : {formatter.ToString(originalTree, ShowType.Infix)}");
-            var savedPath = manager.Save(originalTree);
+            var savedPath = manager.Save(originalTree, ShowType.Infix);
             var loadedTree = manager.Load<int>(savedPath);
             Console.WriteLine($"AfterSave : {formatter.ToString(loadedTree, ShowType.Infix)}");
             

@@ -33,6 +33,11 @@ namespace Tree
             return ToString(tree.Root, formatInfo);
         }
 
+        internal string ToString(BinaryTree<T> tree, FormatInfo info)
+        {
+            return ToString(tree.Root, info);
+        }
+
         private string ToString(TreeNode<T> node, FormatInfo formatInfo)
         {
             if (node == null)
