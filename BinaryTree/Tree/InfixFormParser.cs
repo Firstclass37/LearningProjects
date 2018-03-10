@@ -28,13 +28,13 @@ namespace Tree
         {
             var corrected = Correct(treeString.Trim());
             var parts = ParseParts(corrected);
-            if (parts.Length != 3 || parts[_formatInfo.RootPos].Contains("("))
+            if (parts.Length != 3 || parts[_formatInfo.RootPos].Contains(_formatInfo.RegionStart))
                 throw new ArgumentException($"Invalid tree part {treeString}");
             var node = new TreeNode<T>(JsonConvert.DeserializeObject<T>(TakeValue(parts[_formatInfo.RootPos])));
-            var leftChild = parts[_formatInfo.LeftChildPos].Contains("(")
+            var leftChild = parts[_formatInfo.LeftChildPos].Contains(_formatInfo.RegionStart)
                 ? ParseNode<T>(parts[_formatInfo.LeftChildPos])
                 : CreateNode<T>(parts[_formatInfo.LeftChildPos]);
-            var rightChild = parts[_formatInfo.RightChildPos].Contains("(")
+            var rightChild = parts[_formatInfo.RightChildPos].Contains(_formatInfo.RegionStart)
                 ? ParseNode<T>(parts[_formatInfo.RightChildPos])
                 : CreateNode<T>(parts[_formatInfo.RightChildPos]);
             node.AddChild(leftChild);
@@ -45,9 +45,9 @@ namespace Tree
         private string Correct(string treeString)
         {
             var corrected = treeString;
-            if (treeString.StartsWith("("))
+            if (treeString.StartsWith(_formatInfo.RegionStart.ToString()))
                 corrected = treeString.Remove(0, 1);
-            if (treeString.EndsWith(")"))
+            if (treeString.EndsWith(_formatInfo.RegionEnd.ToString()))
                 corrected = corrected.Remove(corrected.Length -1, 1);
             return corrected;
         }
@@ -66,22 +66,22 @@ namespace Tree
         private string ParsePart(string nodeString, ref int startIndex)
         {
             var stringBuilder = new StringBuilder();
-            var openBrackets = 0;
-            var closeBrackets = 0;
+            var regionStarts = 0;
+            var regionEnds = 0;
             var isValueRegion = false;
             while (startIndex < nodeString.Length)
             {
                 var curChar = nodeString[startIndex];
                 startIndex++;
-                if (curChar.ToString() == _formatInfo.ValueStart)
+                if (curChar == _formatInfo.ValueStart)
                     isValueRegion = true;
-                if (curChar.ToString() == _formatInfo.ValueEnd)
+                if (curChar == _formatInfo.ValueEnd)
                     isValueRegion = false;
-                if (curChar == '(')
-                    openBrackets++;
-                if (curChar == ')')
-                    closeBrackets++;
-                if (!isValueRegion && curChar == ',' && closeBrackets == openBrackets)
+                if (curChar == _formatInfo.RegionStart)
+                    regionStarts++;
+                if (curChar == _formatInfo.RegionEnd)
+                    regionEnds++;
+                if (!isValueRegion && curChar == ',' && regionEnds == regionStarts)
                     break;
                 stringBuilder.Append(curChar);
             }
@@ -97,8 +97,8 @@ namespace Tree
 
         private string TakeValue(string sourceString)
         {
-            var neededChars = sourceString.Trim().Where(v => v.ToString() != _formatInfo.ValueStart &&
-                                                      v.ToString() != _formatInfo.ValueEnd)
+            var neededChars = sourceString.Trim().Where(v => v != _formatInfo.ValueStart &&
+                                                      v != _formatInfo.ValueEnd)
                 .ToArray();
             var targetValue = new string(neededChars);
             return targetValue;

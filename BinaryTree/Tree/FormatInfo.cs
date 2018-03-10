@@ -7,10 +7,10 @@ namespace Tree
         public FormatInfo(ShowType type)
         {
             InitPos(type);
-            ValueStart = "";
-            ValueEnd = "";
-            RegionStart = "";
-            RegionEnd = "";
+            ValueStart = ' ';
+            ValueEnd = ' ';
+            RegionStart = '(';
+            RegionEnd = ')';
         }
 
         public int RootPos { get; set; }
@@ -19,13 +19,13 @@ namespace Tree
 
         public int RightChildPos { get; set; }
 
-        public string ValueStart { get; set; }
+        public char ValueStart { get; set; }
 
-        public string ValueEnd { get; set; }
+        public char ValueEnd { get; set; }
 
-        public string RegionStart { get; set; }
+        public char RegionStart { get; set; }
 
-        public string RegionEnd { get; set; }
+        public char RegionEnd { get; set; }
 
         private void InitPos(ShowType type)
         {

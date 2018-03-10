@@ -17,8 +17,6 @@ namespace BinaryTreeApp
         {
             var formatter = new Formatter<int>();
             var formatInfo = new FormatInfo(ShowType.Infix);
-            formatInfo.ValueStart = "<";
-            formatInfo.ValueEnd = ">";
             var manager = new TreeManager();
             var originalTree = new BinaryTree<int>();
             originalTree.Add(new[] { 7, 4, 9, 1, 3, -1, 8, 2, 11 });
