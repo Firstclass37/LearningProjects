@@ -9,18 +9,19 @@ namespace Tree
     {
         public string Save<T>(BinaryTree<T> tree) where T: IComparable<T>
         {
+            var formatter = new Formatter<T>(i => JsonConvert.SerializeObject(i));
             var assemblyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var newFile = Path.Combine(assemblyPath, $"tree_{DateTime.Now:dd-MM-yyyy-hh-mm-ss}.txt");
-            var treeString = tree.Show(i => JsonConvert.SerializeObject(i), ShowType.Infix);
+            var treeString = formatter.ToString(tree, ShowType.Infix);
             File.WriteAllText(newFile, treeString);
             return newFile;
         }
 
         public BinaryTree<T> Load<T>(string path) where T: IComparable<T>
         {
-            var infinxParser = new InfixFormParser<T>();
+            var infinxParser = new InfixFormParser(new FormatInfo {RootPos = 1, LeftChildPos = 0, RightChildPos = 2});
             var treeString = File.ReadAllText(path);
-            var tree = infinxParser.Parse(treeString);
+            var tree = infinxParser.Parse<T>(treeString);
             return tree;
         }
     }

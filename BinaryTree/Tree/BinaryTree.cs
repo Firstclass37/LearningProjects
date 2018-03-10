@@ -1,11 +1,12 @@
 ﻿using System;
-using Newtonsoft.Json;
 
 namespace Tree
 {
     public sealed class BinaryTree<T> where T : IComparable<T>
     {
         private TreeNode<T> _root;
+
+        internal TreeNode<T> Root => _root;
 
         public void Add(T value)
         {
@@ -60,35 +61,9 @@ namespace Tree
             }
         }
 
-        public string Show(Func<T, string> toString, ShowType type)
-        {
-            return Show(_root, toString, type);
-        }
-
         internal void SetRoot(TreeNode<T> root)
         {
             _root = root;
-        }
-
-        private string Show(TreeNode<T> node, Func<T, string> toString , ShowType showType)
-        {
-            if (node == null)
-                return " ";
-            if (!node.HasAnyChilds())
-                return node.Value.ToString();
-            switch (showType)
-            {
-                case ShowType.Prefix:
-                    return
-                        $"({toString(node.Value)}, {Show(node.LeftChild, toString, showType)}, {Show(node.RigthChild, toString, showType)})";
-                case ShowType.Infix:
-                    return
-                        $"({Show(node.LeftChild, toString, showType)}, {toString(node.Value)}, {Show(node.RigthChild, toString, showType)})";
-                case ShowType.Postfix:
-                    return
-                        $"({Show(node.LeftChild,toString, showType)}, {Show(node.RigthChild,toString, showType)}), {toString(node.Value)}";
-            }
-            return "";
         }
 
         private TreeNode<T> Find(T value)

@@ -45,6 +45,8 @@
   <ItemGroup>
     <Compile Include="BinaryTree.cs" />
     <Compile Include="Extensions\RegexExtentions.cs" />
+    <Compile Include="FormatInfo.cs" />
+    <Compile Include="Formatter.cs" />
     <Compile Include="InfixFormParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ShowType.cs" />

@@ -5,29 +5,37 @@ using Newtonsoft.Json;
 
 namespace Tree
 {
-    internal sealed class InfixFormParser<T> where T : IComparable<T>
+    internal sealed class InfixFormParser
     {
-        public BinaryTree<T> Parse(string treeString)
+        private readonly FormatInfo _formatInfo;
+
+
+        public InfixFormParser(FormatInfo formatInfo)
+        {
+            _formatInfo = formatInfo;
+        }
+
+        public BinaryTree<T> Parse<T>(string treeString) where T : IComparable<T>
         {
             var tree = new BinaryTree<T>();
-            var root = Parse<T>(treeString);
+            var root = ParseNode<T>(treeString);
             tree.SetRoot(root);
             return tree;
         }
 
-        private TreeNode<T> Parse<T>(string treeString) where T : IComparable<T>
+        private TreeNode<T> ParseNode<T>(string treeString) where T : IComparable<T>
         {
             var corrected = Correct(treeString.Trim());
             var parts = ParseParts(corrected);
-            if (parts.Length != 3 || parts[1].Contains("("))
+            if (parts.Length != 3 || parts[_formatInfo.RootPos].Contains("("))
                 throw new ArgumentException($"Invalid tree part {treeString}");
-            var node = new TreeNode<T>(JsonConvert.DeserializeObject<T>(parts[1]));
-            var leftChild = parts[0].Contains("(")
-                ? Parse<T>(parts[0])
-                : CreateNode<T>(parts[0]);
-            var rightChild = parts[2].Contains("(")
-                ? Parse<T>(parts[2])
-                : CreateNode<T>(parts[2]);
+            var node = new TreeNode<T>(JsonConvert.DeserializeObject<T>(parts[_formatInfo.RootPos]));
+            var leftChild = parts[_formatInfo.LeftChildPos].Contains("(")
+                ? ParseNode<T>(parts[_formatInfo.LeftChildPos])
+                : CreateNode<T>(parts[_formatInfo.LeftChildPos]);
+            var rightChild = parts[_formatInfo.RightChildPos].Contains("(")
+                ? ParseNode<T>(parts[_formatInfo.RightChildPos])
+                : CreateNode<T>(parts[_formatInfo.RightChildPos]);
             node.AddChild(leftChild);
             node.AddChild(rightChild);
             return node;

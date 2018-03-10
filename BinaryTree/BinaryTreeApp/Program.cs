@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Serialization;
 using Tree;
 
 namespace BinaryTreeApp
@@ -14,23 +15,25 @@ namespace BinaryTreeApp
 
         private static void Parse()
         {
+            var formatter = new Formatter<int>();
             var manager = new TreeManager();
             var originalTree = new BinaryTree<int>();
             originalTree.Add(new[] { 7, 4, 9, 1, 3, -1, 8, 2, 11 });
-            Console.WriteLine($"Original  : {originalTree.Show(i => i.ToString(), ShowType.Infix)}");
+            Console.WriteLine($"Original  : {formatter.ToString(originalTree, ShowType.Infix)}");
             var savedPath = manager.Save(originalTree);
             var loadedTree = manager.Load<int>(savedPath);
-            Console.WriteLine($"AfterSave : {loadedTree.Show(i => i.ToString(), ShowType.Infix)}");
+            Console.WriteLine($"AfterSave : {formatter.ToString(loadedTree, ShowType.Infix)}");
             
         }
 
         private static void Remove()
         {
+            var formatter = new Formatter<int>();
             var tree = new BinaryTree<int>();
             tree.Add(new[] { 7, 4, 9, 1, 3, -1, 8, 2, 11 });
-            Console.WriteLine(tree.Show(i => i.ToString() ,ShowType.Infix));
+            Console.WriteLine(formatter.ToString(tree, ShowType.Infix));
             tree.Remove(1);
-            Console.WriteLine(tree.Show(i => i.ToString(), ShowType.Infix));
+            Console.WriteLine(formatter.ToString(tree, ShowType.Infix));
         }
 
         private static void Contains()
@@ -49,6 +52,7 @@ namespace BinaryTreeApp
 
         private static void ShowTree()
         {
+            var formatter = new Formatter<int>();
             var tree = new BinaryTree<int>();
             tree.Add(new[] { 7, 4, 9, 1, 3, -1, 8, 2, 11 });
             do
@@ -58,11 +62,11 @@ namespace BinaryTreeApp
                 var answer = Console.ReadKey();
                 Console.WriteLine();
                 if (answer.Key == ConsoleKey.D1)
-                    Console.WriteLine(tree.Show(i => i.ToString(), ShowType.Prefix));
+                    Console.WriteLine(formatter.ToString(tree, ShowType.Prefix));
                 else if (answer.Key == ConsoleKey.D2)
-                    Console.WriteLine(tree.Show(i => i.ToString(), ShowType.Postfix));
+                    Console.WriteLine(formatter.ToString(tree, ShowType.Postfix));
                 else if (answer.Key == ConsoleKey.D3)
-                    Console.WriteLine(tree.Show(i => i.ToString(), ShowType.Infix));
+                    Console.WriteLine(formatter.ToString(tree, ShowType.Infix));
                 else
                     Console.WriteLine(":(");
                 //needNext = UiManager.AskBool("Continue");
