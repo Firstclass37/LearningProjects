@@ -5,7 +5,6 @@ namespace Tree
 {
     public sealed class BinaryTree<T> where T : IComparable<T>
     {
-        [JsonProperty]
         private TreeNode<T> _root;
 
         public void Add(T value)
@@ -61,12 +60,17 @@ namespace Tree
             }
         }
 
-        public string Show(ShowType type)
+        public string Show(Func<T, string> toString, ShowType type)
         {
-            return Show(_root, type);
+            return Show(_root, toString, type);
         }
 
-        private string Show(TreeNode<T> node, ShowType showType)
+        internal void SetRoot(TreeNode<T> root)
+        {
+            _root = root;
+        }
+
+        private string Show(TreeNode<T> node, Func<T, string> toString , ShowType showType)
         {
             if (node == null)
                 return " ";
@@ -76,13 +80,13 @@ namespace Tree
             {
                 case ShowType.Prefix:
                     return
-                        $"({node.Value.ToString()}, {Show(node.LeftChild, showType)}, {Show(node.RigthChild, showType)})";
+                        $"({toString(node.Value)}, {Show(node.LeftChild, toString, showType)}, {Show(node.RigthChild, toString, showType)})";
                 case ShowType.Infix:
                     return
-                        $"({Show(node.LeftChild, showType)}, {node.Value.ToString()}, {Show(node.RigthChild, showType)})";
+                        $"({Show(node.LeftChild, toString, showType)}, {toString(node.Value)}, {Show(node.RigthChild, toString, showType)})";
                 case ShowType.Postfix:
                     return
-                        $"({Show(node.LeftChild, showType)}, {Show(node.RigthChild, showType)}), {node.Value.ToString()}";
+                        $"({Show(node.LeftChild,toString, showType)}, {Show(node.RigthChild,toString, showType)}), {toString(node.Value)}";
             }
             return "";
         }
