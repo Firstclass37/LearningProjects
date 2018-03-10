@@ -14,7 +14,7 @@ namespace Tree
             var assemblyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var newFile = Path.Combine(assemblyPath, $"tree_{DateTime.Now.ToFileTime()}.txt");
 
-            var formatInfo = Formatter<T>.CreateInfo(type);
+            var formatInfo = new FormatInfo(type);
             var formatInfoString = JsonConvert.SerializeObject(formatInfo);
             var treeString = formatter.ToString(tree, formatInfo);
 

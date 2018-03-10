@@ -67,15 +67,20 @@ namespace Tree
             var stringBuilder = new StringBuilder();
             var openBrackets = 0;
             var closeBrackets = 0;
+            var isValueRegion = false;
             while (startIndex < nodeString.Length)
             {
                 var curChar = nodeString[startIndex];
                 startIndex++;
+                if (curChar.ToString() == _formatInfo.ValueStart)
+                    isValueRegion = true;
+                if (curChar.ToString() == _formatInfo.ValueEnd)
+                    isValueRegion = false;
                 if (curChar == '(')
                     openBrackets++;
                 if (curChar == ')')
                     closeBrackets++;
-                if (curChar == ',' && closeBrackets == openBrackets)
+                if (!isValueRegion && curChar == ',' && closeBrackets == openBrackets)
                     break;
                 stringBuilder.Append(curChar);
             }

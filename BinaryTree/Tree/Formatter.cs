@@ -16,20 +16,10 @@ namespace Tree
             _toStringFunc = toStringFunc;
         }
 
-        internal static FormatInfo CreateInfo(ShowType type)
-        {
-            if (type == ShowType.Infix)
-                return new FormatInfo {RootPos = 1, LeftChildPos = 0, RightChildPos = 2};
-            if (type == ShowType.Prefix)
-                return new FormatInfo { RootPos = 0, LeftChildPos = 1, RightChildPos = 2 };
-            if (type == ShowType.Postfix)
-                return new FormatInfo { RootPos = 1, LeftChildPos = 2, RightChildPos = 0 };
-            throw new ArgumentException($"Unknown type {nameof(type)} : {type}");
-        }
 
         public string ToString(BinaryTree<T> tree, ShowType showType)
         {
-            var formatInfo = CreateInfo(showType);
+            var formatInfo = new FormatInfo(showType);
             return ToString(tree.Root, formatInfo);
         }
 
@@ -47,7 +37,7 @@ namespace Tree
             var parametrs = new Object[3];
             parametrs[formatInfo.LeftChildPos] = ToString(node.LeftChild, formatInfo);
             parametrs[formatInfo.RightChildPos] = ToString(node.RigthChild, formatInfo);
-            parametrs[formatInfo.RootPos] = _toStringFunc(node.Value);
+            parametrs[formatInfo.RootPos] = $"{formatInfo.ValueStart}{_toStringFunc(node.Value)}{formatInfo.ValueEnd}";
             return string.Format("({0}, {1}, {2})", parametrs);
         }
     }
