@@ -34,13 +34,14 @@ namespace Tree
                 return " ";
             if (!node.HasAnyChilds())
                 return $"{formatInfo.ValueStart}{_toStringFunc(node.Value)}{formatInfo.ValueEnd}";
-            var parametrs = new Object[5];
+            var parametrs = new Object[6];
             parametrs[formatInfo.LeftChildPos] = ToString(node.LeftChild, formatInfo);
             parametrs[formatInfo.RightChildPos] = ToString(node.RigthChild, formatInfo);
             parametrs[formatInfo.RootPos] = $"{formatInfo.ValueStart}{_toStringFunc(node.Value)}{formatInfo.ValueEnd}";
             parametrs[3] = formatInfo.RegionStart;
             parametrs[4] = formatInfo.RegionEnd;
-            return string.Format("{3}{0}, {1}, {2}{4}", parametrs);
+            parametrs[5] = formatInfo.ValSeparator;
+            return string.Format("{3}{0}{5} {1}{5} {2}{4}", parametrs);
         }
     }
 }

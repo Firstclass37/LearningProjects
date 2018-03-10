@@ -11,6 +11,7 @@ namespace Tree
             ValueEnd = ' ';
             RegionStart = '(';
             RegionEnd = ')';
+            ValSeparator = ',';
         }
 
         public int RootPos { get; set; }
@@ -26,6 +27,8 @@ namespace Tree
         public char RegionStart { get; set; }
 
         public char RegionEnd { get; set; }
+
+        public char ValSeparator { get; set; }
 
         private void InitPos(ShowType type)
         {

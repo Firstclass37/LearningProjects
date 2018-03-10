@@ -46,7 +46,7 @@
     <Compile Include="BinaryTree.cs" />
     <Compile Include="FormatInfo.cs" />
     <Compile Include="Formatter.cs" />
-    <Compile Include="InfixFormParser.cs" />
+    <Compile Include="TreeParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ShowType.cs" />
     <Compile Include="TreeManager.cs" />

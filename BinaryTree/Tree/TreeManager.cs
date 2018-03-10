@@ -33,7 +33,7 @@ namespace Tree
             var formatInfo = JsonConvert.DeserializeObject<FormatInfo>(treeInfo[0]);
             var treeString = treeInfo[1];
 
-            var infinxParser = new InfixFormParser(formatInfo);
+            var infinxParser = new TreeParser(formatInfo);
 
             var tree = infinxParser.Parse<T>(treeString);
             return tree;

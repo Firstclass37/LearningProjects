@@ -6,12 +6,12 @@ using Newtonsoft.Json;
 
 namespace Tree
 {
-    internal sealed class InfixFormParser
+    internal sealed class TreeParser
     {
         private readonly FormatInfo _formatInfo;
 
 
-        public InfixFormParser(FormatInfo formatInfo)
+        public TreeParser(FormatInfo formatInfo)
         {
             _formatInfo = formatInfo;
         }
@@ -81,7 +81,7 @@ namespace Tree
                     regionStarts++;
                 if (curChar == _formatInfo.RegionEnd)
                     regionEnds++;
-                if (!isValueRegion && curChar == ',' && regionEnds == regionStarts)
+                if (!isValueRegion && curChar == _formatInfo.ValSeparator && regionEnds == regionStarts)
                     break;
                 stringBuilder.Append(curChar);
             }
